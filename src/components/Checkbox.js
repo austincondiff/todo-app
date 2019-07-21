@@ -7,6 +7,7 @@ const CheckboxInput = styled.div`
   border-radius: 50%;
   box-shadow: inset 0 0 0 1.5px ${props => (props.checked ? props.theme.color.primary : props.theme.borderColor)};
   position: relative;
+  cursor: pointer;
   &:after {
     content: '';
     display: block;

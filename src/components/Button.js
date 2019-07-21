@@ -9,7 +9,7 @@ const Button = styled.button`
         : props.type === 'success'
         ? 'green'
         : props.theme.color.primary
-      : '#E7E7E9'};
+      : props.theme.actionBackgroundColor};
   color: ${props =>
     props.primary ? 'white' : props.type === 'danger' ? 'red' : props.type === 'success' ? 'green' : props.theme.color.primary};
   font-weight: 500;

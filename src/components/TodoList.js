@@ -14,72 +14,77 @@ const ListHeader = styled.div`
 const ListTitleWrap = styled.div`
   flex: 1;
 `
-const ListActionsWrap = styled.div``
+const ListActionsWrap = styled.div`
+  padding-left: 16px;
+`
 const ListTitle = styled.h1`
   margin: 0;
+  margin-bottom: 8px;
   color: ${props => props.theme.color.primary};
 `
+const ListTitleInput = styled.input.attrs({ type: 'text' })`
+  margin: 0;
+  padding: 8px;
+  color: ${props => props.theme.color.primary};
+  background-color: ${props => props.theme.alternateBackgroundColor};
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  font-size: 32px;
+  font-weight: 700;
+  width: 100%;
+  margin-left: -8px;
+  margin-top: -8px;
+`
 const TodoItems = styled.div``
+const ButtonGroup = styled.div`
+  margin: 0 -4px;
+  & ${Button} {
+    margin: 0 4px;
+  }
+`
 
 class TodoList extends React.Component {
-  state = { count: JSON.parse(localStorage.getItem('count')) || 0, todos: JSON.parse(localStorage.getItem('todos')) || [] }
+  state = { edit: false, count: JSON.parse(localStorage.getItem('count')) || 0 }
 
   addTodo = () => {
-    this.setState(
-      {
-        count: this.state.count + 1,
-        todos: [...this.state.todos, { id: this.state.count, text: '', done: false }]
-      },
-      () => {
-        localStorage.setItem('todos', JSON.stringify(this.state.todos))
-        localStorage.setItem('count', this.state.count)
-        console.log(this.state.todos)
-      }
-    )
+    console.log('Adding todo')
+    const todos = [...this.props.todoList.todos, { id: this.state.count, text: '', done: false }]
+
+    this.props.updateTodoListTodos(this.props.todoList.id, todos)
+    this.setState({ count: this.state.count + 1 }, () => localStorage.setItem('count', this.state.count))
   }
 
   handleTextChange = (id, text) => {
     console.log(`Changing text on item #${id} to ${text}.`)
-
-    this.setState(
-      {
-        todos: this.state.todos.map(todo => {
-          if (todo.id === id) {
-            return { ...todo, text }
-          }
-          return todo
-        })
-      },
-      () => {
-        console.log(this.state.todos)
-        localStorage.setItem('todos', JSON.stringify(this.state.todos))
+    const todos = this.props.todoList.todos.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, text }
       }
-    )
+      return todo
+    })
+
+    this.props.updateTodoListTodos(this.props.todoList.id, todos)
   }
 
   handleStatusChange = (id, done) => {
-    this.setState(
-      {
-        todos: this.state.todos.map(todo => {
-          if (todo.id === id) {
-            console.log(`Changing status on item #${id} to ${!todo.done ? 'complete' : 'incomplete'}.`)
-            return { ...todo, done }
-          }
-          return todo
-        })
-      },
-      () => {
-        console.log(this.state.todos)
-        localStorage.setItem('todos', JSON.stringify(this.state.todos))
+    const todos = this.props.todoList.todos.map(todo => {
+      if (todo.id === id) {
+        console.log(`Changing status on item #${id} to ${!todo.done ? 'complete' : 'incomplete'}.`)
+        return { ...todo, done }
       }
-    )
+
+      return todo
+    })
+
+    this.props.updateTodoListTodos(this.props.todoList.id, todos)
   }
 
   handleDelete = id => {
-    this.setState({ todos: this.state.todos.filter(todo => todo.id !== id) }, () => {
-      console.log(`Delete item #${id}`)
-      localStorage.setItem('todos', JSON.stringify(this.state.todos))
-    })
+    const todos = this.props.todoList.todos.filter(todo => todo.id !== id)
+
+    this.props.updateTodoListTodos(this.props.todoList.id, todos)
+    console.log(`Delete item #${id}`)
   }
 
   handleKeyPress = e => {
@@ -88,22 +93,44 @@ class TodoList extends React.Component {
     }
   }
 
+  handleEdit = () => {
+    this.setState({ edit: true, listName: this.props.todoList.name })
+  }
+
+  handleSave = () => {
+    this.props.updateTodoListName(this.props.todoList.id, this.state.listName)
+    this.setState({ edit: false })
+  }
+
+  updateListName = e => {
+    this.setState({ listName: e.target.value })
+  }
+
   render() {
     console.log(this.state.todos)
+    const { edit } = this.state
+
     return (
       <ListWrap>
         <ListHeader>
           <ListTitleWrap>
-            <ListTitle>To Do Items</ListTitle>
+            {edit ? (
+              <ListTitleInput autoFocus value={this.state.listName} onChange={this.updateListName} />
+            ) : (
+              <ListTitle>{this.props.todoList.name}</ListTitle>
+            )}
           </ListTitleWrap>
           <ListActionsWrap>
-            <Button primary onClick={() => this.addTodo()}>
-              Add Todo
-            </Button>
+            <ButtonGroup>
+              <Button onClick={edit ? this.handleSave : this.handleEdit}>{edit ? 'Save' : 'Edit'}</Button>
+              <Button primary onClick={() => this.addTodo()}>
+                Add Todo
+              </Button>
+            </ButtonGroup>
           </ListActionsWrap>
         </ListHeader>
         <TodoItems>
-          {this.state.todos.map(todo => (
+          {this.props.todoList.todos.map(todo => (
             <TodoItem
               key={todo.id}
               done={todo.done}
