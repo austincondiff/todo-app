@@ -25,8 +25,6 @@ const SidebarItems = styled.div`
 `
 const SidebarItem = styled.div`
   background-color: ${props => (props.active ? props.theme.actionBackgroundColor : 'transparent')};
-  margin-left: -32px;
-  margin-right: -32px;
   padding: 12px 32px;
   display: flex;
   align-items: center;
@@ -44,23 +42,52 @@ const ToggleLabel = styled.span`
   flex: 1;
   cursor: pointer;
 `
+const SidebarItemWrap = styled.div`
+  position: relative;
+  margin-left: -32px;
+  margin-right: -32px;
+`
+const DeleteListButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 32px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.25s;
+  ${SidebarItemWrap}:hover & {
+    color: ${props => props.theme.borderColor};
+  }
+  ${SidebarItemWrap}:hover &:hover {
+    color: ${props => props.theme.color.danger};
+  }
+`
 
-const Sidebar = ({ darkMode, onModeChange, todoLists, onListChange, onAddTodoList, activeTodoListId }) => {
+const Sidebar = ({ darkMode, onModeChange, todoLists, onListChange, onAddTodoList, onDeleteTodoList, activeTodoListId }) => {
   return (
     <SidebarWrap>
       <SidebarTitle>To do lists</SidebarTitle>
       <SidebarItems>
         {todoLists.map(list => (
-          <SidebarItem active={list.id === activeTodoListId} onClick={() => onListChange(list.id)}>
-            {list.name}
-          </SidebarItem>
+          <SidebarItemWrap key={list.id}>
+            <SidebarItem active={list.id === activeTodoListId} onClick={() => onListChange(list.id)}>
+              {list.name}
+            </SidebarItem>
+            <DeleteListButton onClick={() => onDeleteTodoList(list.id)}>×</DeleteListButton>
+          </SidebarItemWrap>
         ))}
       </SidebarItems>
       <AddButton onClick={onAddTodoList}>+</AddButton>
-      <SidebarItem>
-        <ToggleLabel onClick={onModeChange}>Dark Mode</ToggleLabel>
-        <ToggleSwitch onChange={onModeChange} checked={darkMode} />
-      </SidebarItem>
+      <SidebarItemWrap>
+        <SidebarItem onClick={onModeChange}>
+          <ToggleLabel>Dark Mode</ToggleLabel>
+          <ToggleSwitch onChange={onModeChange} checked={darkMode} />
+        </SidebarItem>
+      </SidebarItemWrap>
     </SidebarWrap>
   )
 }

@@ -20,6 +20,8 @@ const ItemInput = styled.input.attrs({ type: 'text' })`
   padding: 16px 0;
   background-color: transparent;
   color: ${props => props.theme.textColor};
+  opacity: ${props => (props.done ? 0.5 : 1)};
+  // text-decoration: ${props => (props.done ? 'line-through' : 'none')};
 `
 const ItemButton = styled(Button)`
   align-self: stretch;
@@ -36,10 +38,13 @@ const TodoItem = ({ text, done, onTextChange, onStatusChange, onDelete, addNewIt
     <ItemCheckbox onChange={checked => onStatusChange(checked)} checked={done} />
     <ItemInput
       onKeyPress={e => e.key === 'Enter' && addNewItem()}
+      onKeyDown={e => e.key === 'Backspace' && text === '' && onDelete()}
       type="text"
       onChange={e => onTextChange(e.target.value)}
       value={text}
       autoFocus
+      done={done}
+      disabled={done}
     />
     <ItemButton size="sm" primary type="danger" onClick={onDelete}>
       Delete

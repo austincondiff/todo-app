@@ -27,7 +27,8 @@ class App extends React.Component {
     )
   }
 
-  handleListChange = activeTodoListId => this.setState({ activeTodoListId })
+  handleListChange = activeTodoListId =>
+    this.setState({ activeTodoListId }, () => localStorage.setItem('activeTodoListId', activeTodoListId))
 
   updateTodoListTodos = (id, todos) => {
     this.setState(
@@ -61,6 +62,23 @@ class App extends React.Component {
     )
   }
 
+  handleDeleteTodoList = id => {
+    this.setState(
+      {
+        todoLists: this.state.todoLists.filter(list => list.id !== id),
+        activeTodoListId:
+          this.state.activeTodoListId === id
+            ? this.state.todoLists[0].id === id
+              ? this.state.todoLists[1].id
+              : this.state.todoLists[0].id
+            : this.state.activeTodoListId
+      },
+      () => {
+        localStorage.setItem('todoLists', JSON.stringify(this.state.todoLists))
+      }
+    )
+  }
+
   render() {
     const { darkMode, todoLists, activeTodoListId } = this.state
 
@@ -76,8 +94,9 @@ class App extends React.Component {
               localStorage.setItem('darkMode', JSON.stringify(!darkMode))
             }}
             onListChange={this.handleListChange}
-            todoLists={todoLists}
             onAddTodoList={this.handleAddTodoList}
+            onDeleteTodoList={this.handleDeleteTodoList}
+            todoLists={todoLists}
             darkMode={darkMode}
             activeTodoListId={activeTodoListId}
           />

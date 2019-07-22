@@ -7,7 +7,7 @@ const ToggleSwitchInput = styled.div`
   border-radius: 100px;
   box-shadow: inset 0 0 0 1.5px ${props => (props.checked ? 'transparent' : props.theme.borderColor)};
   position: relative;
-  background-color: ${props => (props.checked ? props.theme.color.success : 'rgba(255,255,255,0.15)')};
+  background-color: ${props => (props.checked ? props.theme.color.success : props.theme.actionBackgroundColor)};
   transition: 0.25s;
   cursor: pointer;
   &:after {
@@ -20,8 +20,13 @@ const ToggleSwitchInput = styled.div`
     width: 28px;
     height: 28px;
     background-color: #ffffff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: 0.25s;
+  }
+  &:hover {
+    &:after {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
   }
 `
 

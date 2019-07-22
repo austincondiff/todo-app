@@ -6,6 +6,9 @@ import Button from './Button'
 const ListWrap = styled.div`
   padding: 32px;
   padding-left: 312px; // sidebar width + padding
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 `
 const ListHeader = styled.div`
   display: flex;
@@ -36,16 +39,30 @@ const ListTitleInput = styled.input.attrs({ type: 'text' })`
   margin-left: -8px;
   margin-top: -8px;
 `
-const TodoItems = styled.div``
+const TodoItems = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`
 const ButtonGroup = styled.div`
   margin: 0 -4px;
   & ${Button} {
     margin: 0 4px;
   }
 `
+const EmptyAddNew = styled.div`
+  flex: 1;
+  cursor: text;
+`
 
 class TodoList extends React.Component {
   state = { edit: false, count: JSON.parse(localStorage.getItem('count')) || 0 }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.todoList.id !== prevProps.todoList.id && this.state.edit) {
+      this.setState({ edit: false })
+    }
+  }
 
   addTodo = () => {
     console.log('Adding todo')
@@ -123,7 +140,7 @@ class TodoList extends React.Component {
           <ListActionsWrap>
             <ButtonGroup>
               <Button onClick={edit ? this.handleSave : this.handleEdit}>{edit ? 'Save' : 'Edit'}</Button>
-              <Button primary onClick={() => this.addTodo()}>
+              <Button primary onClick={this.addTodo}>
                 Add Todo
               </Button>
             </ButtonGroup>
@@ -141,6 +158,7 @@ class TodoList extends React.Component {
               addNewItem={this.addTodo}
             />
           ))}
+          <EmptyAddNew onClick={this.addTodo} />
         </TodoItems>
       </ListWrap>
     )

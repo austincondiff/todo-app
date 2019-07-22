@@ -4,7 +4,8 @@ export const typography = {
 
 export const color = {
   primary: '#007afe',
-  success: '#2FD058'
+  success: '#2FD058',
+  danger: 'red'
 }
 
 export const lightTheme = {
