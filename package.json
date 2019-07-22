@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "npm run build; gh-deploy"
   },
   "author": "",
   "license": "ISC",
@@ -30,10 +31,10 @@
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "^7.13.0",
     "html-webpack-plugin": "^3.2.0",
+    "mem": ">=4.0.0",
     "prettier-eslint-cli": "^4.7.1",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2",
-    "mem": ">=4.0.0"
+    "webpack-dev-server": "^3.7.2"
   }
 }
