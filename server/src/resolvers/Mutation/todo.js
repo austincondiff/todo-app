@@ -12,13 +12,10 @@ const todo = {
     })
   },
 
-  async updateTodo(parent, { id, title, complete, todoList }, context) {
+  async updateTodo(parent, { id, title, complete, todoListId }, context) {
     const userId = getUserId(context)
     const todoExists = await context.prisma.$exists.todo({
       id,
-      title,
-      complete,
-      todoList: { id: todoList.id },
       author: { id: userId }
     })
 
@@ -27,7 +24,12 @@ const todo = {
     }
 
     return context.prisma.updateTodo({
-      where: { id }
+      where: { id },
+      data: {
+        ...(title ? { title } : {}),
+        ...(complete ? { complete } : {}),
+        ...(todoListId ? { todoList: { connect: { id: todoListId } } } : {})
+      }
     })
   },
 

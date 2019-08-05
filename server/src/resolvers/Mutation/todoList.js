@@ -14,7 +14,6 @@ const todoList = {
     const userId = getUserId(context)
     const todoListExists = await context.prisma.$exists.todoList({
       id,
-      title,
       author: { id: userId }
     })
 
@@ -23,7 +22,8 @@ const todoList = {
     }
 
     return context.prisma.updateTodoList({
-      where: { id }
+      where: { id },
+      data: { title }
     })
   },
 

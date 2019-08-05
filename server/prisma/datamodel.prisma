@@ -3,14 +3,14 @@ type Todo {
   title: String
   complete: Boolean!
   author: User!
-  todoList: TodoList!
+  todoList: TodoList! @relation(name: "TodosInTodoList")
 }
 
 type TodoList {
   id: ID! @id
   title: String
   author: User!
-  todos: [Todo!]!
+  todos: [Todo!]! @relation(name: "TodosInTodoList", onDelete: CASCADE)
 }
 
 type User {
