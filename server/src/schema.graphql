@@ -1,0 +1,50 @@
+type Query {
+  todos: [Todo!]!
+  todo(id: ID!): Todo
+  todoLists: [TodoList!]!
+  todoList(id: ID!): TodoList
+  me: User
+}
+
+type Mutation {
+  signup(email: String!, password: String!, name: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  createTodo(title: String!, todoListId: String!): Todo!
+  updateTodo(id: ID!, title: String!, complete: Boolean!): Todo!
+  deleteTodo(id: ID!): Todo!
+  createTodoList(title: String!): TodoList!
+  updateTodoList(id: ID!, title: String!): TodoList!
+  deleteTodoList(id: ID!): TodoList!
+}
+
+type Subscription {
+  todoSubscription: Todo
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  todos: [Todo!]!
+  todoLists: [TodoList]
+}
+
+type Todo {
+  id: ID!
+  complete: Boolean
+  title: String
+  author: User!
+  todoList: TodoList!
+}
+
+type TodoList {
+  id: ID!
+  title: String!
+  author: User!
+  todos: [Todo]
+}

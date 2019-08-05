@@ -1,0 +1,23 @@
+type Todo {
+  id: ID! @id
+  title: String
+  complete: Boolean!
+  author: User!
+  todoList: TodoList!
+}
+
+type TodoList {
+  id: ID! @id
+  title: String
+  author: User!
+  todos: [Todo!]!
+}
+
+type User {
+  id: ID! @id
+  email: String! @unique
+  password: String!
+  name: String!
+  todos: [Todo!]!
+  todoLists: [TodoList!]!
+}
