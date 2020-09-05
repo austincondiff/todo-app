@@ -1,6 +1,6 @@
 # Todo app
 
-This is a demo todo app created using React.js. This is a test.
+This is a demo todo app created using React.js.
 
 ## Setup
 
